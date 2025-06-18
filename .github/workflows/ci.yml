@@ -25,14 +25,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m venv venv
-          source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Run basic Flask app test
         run: |
-          source venv/bin/activate
           python app.py &
           sleep 3
           curl http://127.0.0.1:5000/quote
