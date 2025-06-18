@@ -1,4 +1,4 @@
----
+kkk---
 name: CI - Flask Quote API
 
 on:
@@ -36,7 +36,7 @@ jobs:
         run: python --version
 
       - name: Print secret quote (securely)
-        run: echo "Secret Quote: ${{ secrets.MY_SECRET_QUOTE }}"
+        run: echo 'Secret Quote: ${{ secrets.MY_SECRET_QUOTE }}'
 
       - name: Install dependencies
         run: |
@@ -48,3 +48,4 @@ jobs:
           python app.py &
           sleep 5
           curl -v http://127.0.0.1:5000/quote
+
