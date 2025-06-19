@@ -2,20 +2,7 @@
 name: Reusable CI Workflow
 
 on:
-  workflow_call:
-    inputs:
-      python-version:
-        required: true
-        type: string
-      flask-port:
-        required: true
-        type: string
-      test-path:
-        required: true
-        type: string
-    secrets:
-      MY_SECRET_QUOTE:
-        required: true
+  workflow_call: {}
 
 jobs:
   build:
@@ -37,19 +24,3 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-
-      - name: Debug Python Version
-        run: python --version
-
-      - name: Print secret quote (securely)
-        run: |
-          echo "Secret Quote:"
-          echo "${{ secrets.MY_SECRET_QUOTE }}"
-
-      - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Run basic Flask test
-        run: |
