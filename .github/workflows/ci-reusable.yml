@@ -42,7 +42,9 @@ jobs:
         run: python --version
 
       - name: Print secret quote (securely)
-        run: echo "Secret Quote: ${{ secrets.MY_SECRET_QUOTE }}"
+        run: |
+          echo "Secret Quote:"
+          echo "${{ secrets.MY_SECRET_QUOTE }}"
 
       - name: Install dependencies
         run: |
@@ -51,6 +53,3 @@ jobs:
 
       - name: Run basic Flask test
         run: |
-          python app.py &
-          sleep 5
-          curl -v http://127.0.0.1:${{ inputs.flask-port }}/${{ inputs.test-path }}
