@@ -1,4 +1,4 @@
-name: CI - Flask Quote API
+name: CI - Matrix Reusable Workflow
 
 on:
   push:
@@ -7,11 +7,19 @@ on:
     branches: [main]
 
 jobs:
-  call-reusable-workflow:
-    uses: ./.github/workflows/ci-reusable.yml
-    with:
-      python-version: "3.10.13"
-      flask-port: "5000"
-      test-path: "quote"
-    secrets:
-      MY_SECRET_QUOTE: ${{ secrets.MY_SECRET_QUOTE }}
+  matrix-call:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10.13"]
+
+    steps:
+      - name: Call reusable workflow for ${{ matrix.python-version }}
+        uses: ./.github/workflows/ci-reusable.yml
+        with:
+          python-version: ${{ matrix.python-version }}
+          flask-port: "5000"
+          test-path: "quote"
+        secrets:
+          MY_SECRET_QUOTE: ${{ secrets.MY_SECRET_QUOTE }}
