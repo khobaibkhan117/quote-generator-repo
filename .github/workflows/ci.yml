@@ -1,5 +1,5 @@
 ---
-name: CI - Flask Quote API
+name: CI - Flask Quote API (Caller)
 
 on:
   push:
@@ -8,44 +8,9 @@ on:
     branches: [main]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        python-version: ["3.10.13"]
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Cache pip packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Debug Python Version
-        run: python --version
-
-      - name: Print secret quote (securely)
-        run: |
-          echo "Secret Quote: ${{ secrets.MY_SECRET_QUOTE }}"
-
-      - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Run basic Flask app test
-        run: |
-          python app.py &
-          sleep 5
-          curl -v http://127.0.0.1:5000/quote
+  call-reusable-ci:
+    uses: ./.github/workflows/ci-reusable.yml
+    with:
+      python-version: "3.10.13"
+    secrets:
+      MY_SECRET_QUOTE: ${{ secrets.MY_SECRET_QUOTE }}
