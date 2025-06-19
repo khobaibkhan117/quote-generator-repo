@@ -6,6 +6,12 @@ on:
       python-version:
         required: true
         type: string
+      flask-port:
+        required: true
+        type: string
+      test-path:
+        required: true
+        type: string
     secrets:
       MY_SECRET_QUOTE:
         required: true
@@ -13,6 +19,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,6 +28,20 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ inputs.python-version }}
+
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Debug Python Version
+        run: python --version
+
+      - name: Print secret quote (securely)
+        run: echo "Secret Quote: ${{ secrets.MY_SECRET_QUOTE }}"
 
       - name: Install dependencies
         run: |
@@ -31,8 +52,4 @@ jobs:
         run: |
           python app.py &
           sleep 5
-          curl -v http://127.0.0.1:5000/quote
-
-      - name: Print secret quote
-        run: |
-          echo "Secret from reusable: ${{ secrets.MY_SECRET_QUOTE }}"
+          curl -v http://127.0.0.1:${{ inputs.flask-port }}/${{ inputs.test-path }}
