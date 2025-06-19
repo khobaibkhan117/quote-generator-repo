@@ -1,5 +1,4 @@
----
-name: CI - Flask Quote API (Caller)
+name: CI - Flask Quote API
 
 on:
   push:
@@ -8,9 +7,11 @@ on:
     branches: [main]
 
 jobs:
-  call-reusable-ci:
+  call-reusable-workflow:
     uses: ./.github/workflows/ci-reusable.yml
     with:
       python-version: "3.10.13"
+      flask-port: "5000"
+      test-path: "quote"
     secrets:
       MY_SECRET_QUOTE: ${{ secrets.MY_SECRET_QUOTE }}
